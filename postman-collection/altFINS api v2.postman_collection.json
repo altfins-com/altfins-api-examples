@@ -1,0 +1,370 @@
+{
+  "info": {
+    "_postman_id": "00c99276-f0d3-45ae-a922-b08a33dfdbb2",
+    "name": "altFINS api v2",
+    "description": "Set your api key in authorization and your'e ready to call endpoints\n\nAll informations about endpoints you can find at official altfins documentation [https://altfins.com/crypto-market-and-analytical-data-api/documentation/api/public-api](https://altfins.com/crypto-market-and-analytical-data-api/documentation/api/public-api)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "17750925"
+  },
+  "item": [
+    {
+      "name": "Screener data",
+      "item": [
+        {
+          "name": "Get Screener Data",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"symbols\": [\r\n    \"BTC\"\r\n  ],\r\n  \"timeInterval\": \"DAILY\",\r\n  \"displayType\": [\r\n    \"MARKET_CAP\",\r\n    \"DOLLAR_VOLUME\"\r\n  ],\r\n  \"coinTypeFilter\": \"REGULAR\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://altfins.com/api/v2/public/screener-data/search-requests",
+              "protocol": "https",
+              "host": [
+                "altfins",
+                "com"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "public",
+                "screener-data",
+                "search-requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Market Data Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://altfins.com/api/v2/public/screener-data/value-types",
+              "protocol": "https",
+              "host": [
+                "altfins",
+                "com"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "public",
+                "screener-data",
+                "value-types"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "More info at [https://altfins.com/crypto-market-and-analytical-data-api/documentation/api/search](https://altfins.com/crypto-market-and-analytical-data-api/documentation/api/search)"
+    },
+    {
+      "name": "OHLC",
+      "item": [
+        {
+          "name": "Get Data",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"symbols\": [\r\n    \"BTC\"\r\n  ],\r\n  \"timeInterval\": \"DAILY\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://altfins.com/api/v2/public/ohlcv/snapshot-requests",
+              "protocol": "https",
+              "host": [
+                "altfins",
+                "com"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "public",
+                "ohlcv",
+                "snapshot-requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Historical Data",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"symbol\": \"BTC\",\r\n  \"timeInterval\": \"DAILY\",\r\n  \"from\": \"2024-07-29T15:51:28.071Z\",\r\n  \"to\": \"2024-07-29T15:51:28.071Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://altfins.com/api/v2/public/ohlcv/snapshot-requests",
+              "protocol": "https",
+              "host": [
+                "altfins",
+                "com"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "public",
+                "ohlcv",
+                "snapshot-requests"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "More info at [https://altfins.com/crypto-market-and-analytical-data-api/documentation/api/get-snapshot](https://altfins.com/crypto-market-and-analytical-data-api/documentation/api/get-snapshot)"
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Historical Analytics Data",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"symbol\": \"BTC\",\r\n    \"timeInterval\": \"DAILY\",\r\n    \"analyticsType\": \"SMA10\",\r\n    \"from\": \"2026-01-01T00:00:00.000Z\",\r\n    \"to\": \"2026-01-08T00:00:00.000Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://altfins.com/api/v2/public/analytics/search-requests",
+              "protocol": "https",
+              "host": [
+                "altfins",
+                "com"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "public",
+                "analytics",
+                "search-requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Analytic Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://altfins.com/api/v2/public/analytics/types",
+              "protocol": "https",
+              "host": [
+                "altfins",
+                "com"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "public",
+                "analytics",
+                "types"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "More info at [https://altfins.com/crypto-market-and-analytical-data-api/documentation/api/search-1](https://altfins.com/crypto-market-and-analytical-data-api/documentation/api/search-1)"
+    },
+    {
+      "name": "Technical Analysis",
+      "item": [
+        {
+          "name": "Get Analysis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://altfins.com/api/v2/public/technical-analysis/data",
+              "protocol": "https",
+              "host": [
+                "altfins",
+                "com"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "public",
+                "technical-analysis",
+                "data"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "More info at [https://altfins.com/crypto-market-and-analytical-data-api/documentation/api/get-data-1](https://altfins.com/crypto-market-and-analytical-data-api/documentation/api/get-data-1)"
+    },
+    {
+      "name": "Signals feed",
+      "item": [
+        {
+          "name": "Get Signal feed data",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"signals\": [],\r\n    \"direction\": \"BULLISH\",\r\n    \"symbols\": [\r\n        \"BTC\", \"ETH\", \"ETC\", \"XRP\", \"LTC\", \"ADA\", \"SOL\", \"DOGE\", \"TRX\", \"BNB\"\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://altfins.com/api/v2/public/signals-feed/search-requests",
+              "protocol": "https",
+              "host": [
+                "altfins",
+                "com"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "public",
+                "signals-feed",
+                "search-requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get signal keys",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://altfins.com/api/v2/public/signals-feed/signal-keys",
+              "protocol": "https",
+              "host": [
+                "altfins",
+                "com"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "public",
+                "signals-feed",
+                "signal-keys"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "More info at [https://altfins.com/crypto-market-and-analytical-data-api/documentation/api/get-data](https://altfins.com/crypto-market-and-analytical-data-api/documentation/api/get-data)"
+    },
+    {
+      "name": "News Summary",
+      "item": [
+        {
+          "name": "Get News Summary",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"fromDate\": \"2026-01-02T00:00:00Z\",\r\n    \"toDate\": \"2026-01-02T23:00:00Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://altfins.com/api/v2/public/news-summary/search-requests",
+              "protocol": "https",
+              "host": [
+                "altfins",
+                "com"
+              ],
+              "path": [
+                "api",
+                "v2",
+                "public",
+                "news-summary",
+                "search-requests"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "More info [https://altfins.com/crypto-market-and-analytical-data-api/documentation/api/get-summaries](https://altfins.com/crypto-market-and-analytical-data-api/documentation/api/get-summaries)"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "value",
+        "value": "",
+        "type": "string"
+      },
+      {
+        "key": "key",
+        "value": "x-api-key",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
