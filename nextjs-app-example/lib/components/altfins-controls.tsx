@@ -210,7 +210,7 @@ export function AltfinsControls() {
                     signalFilterValue: "UP"
                 }
             ],
-            macdFilter: "BUY",
+            macdFilter: "SELL",
             macdHistogramFilter: "H2_UP",
             minimumMarketCapValue: 5000000,
             coinTypeFilter: "REGULAR"
