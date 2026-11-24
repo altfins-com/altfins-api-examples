@@ -3,7 +3,7 @@
  * Calls Next.js API Route instead of calling external API directly
  */
 
-import { SignalKey, SignalFeedResponse, ScreenerPayload, ScreenerResponse, ScreenerItem } from '../services/altfins';
+import type { SignalKey, SignalFeedResponse, ScreenerPayload, ScreenerResponse, ScreenerItem } from '../services/altfins';
 
 export interface SignalItem {
     timestamp: string;
@@ -18,6 +18,8 @@ export interface SignalItem {
 }
 
 export interface SignalsResponse {
+    totalPages?: number;
+    totalElements?: number;
     size: number;
     number: number;
     content: SignalItem[];
@@ -115,8 +117,7 @@ export async function searchSignals(
     page?: number,
     size?: number,
     sort?: string
-): Promise<SignalFeedResponse<unknown>> {
-    console.log('[use-altfins] searchSignals payload:', payload);
+): Promise<SignalFeedResponse<SignalsResponse>> {
     try {
         const params = new URLSearchParams();
         params.append('endpoint', 'signals-feed/search-requests');
@@ -134,7 +135,6 @@ export async function searchSignals(
 
         if (!response.ok) {
             const data = await response.json();
-            console.error('[use-altfins] searchSignals error data:', data);
             return {
                 success: false,
                 error: data.error || `HTTP ${response.status}`,
@@ -143,10 +143,9 @@ export async function searchSignals(
         }
 
         const data = await response.json();
-        console.log('[use-altfins] searchSignals success data:', data);
         return {
             success: true,
-            data, // Ideally cast to SignalsResponse here if structure matches
+            data,
         };
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);

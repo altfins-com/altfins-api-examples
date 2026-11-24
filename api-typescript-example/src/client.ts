@@ -60,6 +60,9 @@ export class AltfinsApiClient {
       params?: Record<string, string | number | string[] | undefined>;
     }
   ): Promise<T> {
+    if (!this.apiKey.trim()) {
+      throw new Error('Supply an altFINS API key. The example runner reads ALTFINS_API_KEY.');
+    }
     const url = new URL(`${this.baseUrl}${endpoint}`);
 
     // Add query parameters
@@ -91,6 +94,7 @@ export class AltfinsApiClient {
       const response = await fetch(url.toString(), {
         method,
         headers,
+        redirect: 'error',
         body: options?.body ? JSON.stringify(options.body) : undefined,
         signal: controller.signal,
       });

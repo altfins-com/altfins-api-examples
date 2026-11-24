@@ -11,21 +11,16 @@ This Spring Boot application monitors Altfins signals and posts new signals to a
 
 ## Configuration
 
-Edit `src/main/resources/application.properties`:
+Supply these environment variables to the bot process before starting it. Use your secret manager for the two tokens.
 
-```properties
-altfins.api.url=https://altfins.com/api/v2/public/signals-feed/search-requests
-altfins.api.key=YOUR_API_KEY
-telegram.bot.token=YOUR_BOT_TOKEN
-telegram.chat.id=YOUR_CHAT_ID
-monitoring.fixed-rate=300000
+| Variable | Value |
+| --- | --- |
+| `ALTFINS_API_KEY` | altFINS API key |
+| `TELEGRAM_BOT_TOKEN` | BotFather token |
+| `TELEGRAM_BOT_USERNAME` | Telegram bot username |
+| `TELEGRAM_CHAT_ID` | Destination chat ID |
 
-# Optional: Configure monitored assets (default: BTC, ETH, ...)
-altfins.symbols=BTC,ETH,XRP,LTC
-
-# Optional: Configure monitored signals (default: all)
-altfins.signals=FRESH_MOMENTUM_MACD_SIGNAL_LINE_CROSSOVER.TXT,SIGNALS_SUMMARY_SMA_50_200.TXT
-```
+Set `monitoring.fixed-rate`, `altfins.symbols` and `altfins.signals` in `application.properties` to change the polling interval and filters.
 
 ## Running the Application
 

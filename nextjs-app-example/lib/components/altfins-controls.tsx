@@ -3,6 +3,27 @@
 import { useState } from 'react';
 import { getSignalKeys, searchScreenerData, searchSignals, ScreenerPayload, ScreenerResponse, ScreenerItem, SignalSearchPayload, SignalsResponse, SignalItem } from '../hooks/use-altfins';
 
+// Helper Component for Buttons
+const ActionButton = ({ onClick, action, label, loading, colorClass }: { onClick: () => void, action: string, label: string, loading: string | null, colorClass: string }) => (
+    <button
+        onClick={onClick}
+        disabled={loading !== null}
+        className={`flex items-center justify-center px-4 py-3 text-sm font-medium text-white transition-all rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${colorClass}`}
+    >
+        {loading === action ? (
+            <span className="flex items-center gap-2">
+                <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Processing...
+            </span>
+        ) : (
+            label
+        )}
+    </button>
+);
+
 export function AltfinsControls() {
     const [loadingAction, setLoadingAction] = useState<string | null>(null);
     const [result, setResult] = useState<unknown>(null);
@@ -56,27 +77,19 @@ export function AltfinsControls() {
         setIsTableMode(false);
         setSearchType('signal');
 
-        console.log('[AltfinsControls] Sending Search Signals payload:', payload, 'page:', page);
 
         try {
             const response = await searchSignals(payload, page, 20);
-            console.log('[AltfinsControls] Search Signals response:', response);
 
             if (response.success) {
                 setResult(response.data);
-                // Update pagination info - check if SignalsResponse has totalPages
-                // Assuming it does have totalPages or we can infer it. 
-                // If the API returns it (which we assume it does based on Spring Data REST conventions often used)
-                if (response.data && typeof response.data === 'object') {
-                    const data = response.data as any; // Cast to access potential fields
-                    if ('totalPages' in data) {
-                        setTotalPages(data.totalPages);
-                        setCurrentPage(data.number);
-                    } else if ('totalElements' in data) {
-                        // Fallback calculation if only totalElements is present
-                        setTotalPages(Math.ceil(data.totalElements / (data.size || 20)));
-                        setCurrentPage(data.number);
-                    }
+                const data = response.data;
+                if (data && typeof data.totalPages === 'number') {
+                    setTotalPages(data.totalPages);
+                    setCurrentPage(data.number);
+                } else if (data && typeof data.totalElements === 'number') {
+                    setTotalPages(Math.ceil(data.totalElements / (data.size || 20)));
+                    setCurrentPage(data.number);
                 }
                 setCurrentSignalPayload(payload);
             } else {
@@ -303,27 +316,6 @@ export function AltfinsControls() {
         await performSignalSearch(payload, 'SIGNAL_SEARCH', 0);
     };
 
-    // Helper Component for Buttons
-    const ActionButton = ({ onClick, action, label, loading, colorClass }: { onClick: () => void, action: string, label: string, loading: string | null, colorClass: string }) => (
-        <button
-            onClick={onClick}
-            disabled={loading !== null}
-            className={`flex items-center justify-center px-4 py-3 text-sm font-medium text-white transition-all rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${colorClass}`}
-        >
-            {loading === action ? (
-                <span className="flex items-center gap-2">
-                    <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Processing...
-                </span>
-            ) : (
-                label
-            )}
-        </button>
-    );
-
     const renderPagination = () => {
         const showPagination = (searchType === 'screener' || searchType === 'signal') && totalPages > 1;
 
@@ -405,10 +397,10 @@ export function AltfinsControls() {
     const renderTable = (inputData: unknown) => {
         let data: ScreenerItem[] = [];
 
-        if (inputData && typeof inputData === 'object' && 'content' in inputData && Array.isArray((inputData as any).content)) {
+        if (inputData && typeof inputData === 'object' && 'content' in inputData && Array.isArray(inputData.content)) {
             data = (inputData as ScreenerResponse).content;
         } else if (Array.isArray(inputData)) {
-            data = inputData as any;
+            data = inputData;
         } else {
             return (
                 <div className="p-6 bg-red-50 dark:bg-red-900/10 border-l-4 border-red-500">
@@ -416,7 +408,7 @@ export function AltfinsControls() {
                         <div className="ml-3">
                             <h3 className="text-sm font-medium text-red-800 dark:text-red-200">Invalid Data Format</h3>
                             <div className="mt-2 text-sm text-red-700 dark:text-red-300">
-                                <p>Expected 'content' array in response.</p>
+                                <p>Expected a <code>content</code> array in the response.</p>
                             </div>
                         </div>
                     </div>
@@ -538,10 +530,10 @@ export function AltfinsControls() {
     const renderSignalsTable = (inputData: unknown) => {
         let data: SignalItem[] = [];
 
-        if (inputData && typeof inputData === 'object' && 'content' in inputData && Array.isArray((inputData as any).content)) {
+        if (inputData && typeof inputData === 'object' && 'content' in inputData && Array.isArray(inputData.content)) {
             data = (inputData as SignalsResponse).content;
         } else if (Array.isArray(inputData)) {
-            data = inputData as any;
+            data = inputData;
         } else {
             return renderRawJson(inputData);
         }
@@ -652,8 +644,8 @@ export function AltfinsControls() {
         }
 
         if (result && typeof result === 'object' && 'content' in result) {
-            const content = (result as any).content;
-            if (Array.isArray(content) && content.length > 0 && 'signalKey' in content[0]) {
+            const content = result.content;
+            if (Array.isArray(content) && content[0] && typeof content[0] === 'object' && 'signalKey' in content[0]) {
                 return (
                     <div className="flex flex-col">
                         {renderSignalsTable(result)}
@@ -669,6 +661,11 @@ export function AltfinsControls() {
 
         return renderRawJson(result);
     };
+
+    let resultCount: number | string = 0;
+    if (result && typeof result === 'object' && 'totalPages' in result) {
+        resultCount = 'totalElements' in result && typeof result.totalElements === 'number' ? result.totalElements : 'Multi';
+    }
 
     return (
         <div className="space-y-8 animate-fade-in text-slate-800 dark:text-slate-100">
@@ -820,7 +817,7 @@ export function AltfinsControls() {
                 <div className="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 flex justify-between items-center">
                     <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
                         <svg className="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
-                        Results ({result && 'totalPages' in (result as any) ? (result as any).totalElements || 'Multi' : '0'})
+                        Results ({resultCount})
                     </h3>
                     <div className="flex gap-2">
                         {/* Toolbar place holder */}

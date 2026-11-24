@@ -30,7 +30,7 @@ import { AltfinsApiClient } from './src';
 
 // Initialize the client with your API key
 const client = new AltfinsApiClient({
-  apiKey: 'YOUR_API_KEY',
+  apiKey: process.env.ALTFINS_API_KEY ?? '',
 });
 
 // Get current prices for BTC and ETH
@@ -200,7 +200,7 @@ The API uses API Key authentication. Include your key in the `X-API-KEY` header:
 
 ```typescript
 const client = new AltfinsApiClient({
-  apiKey: 'your-api-key-here',
+  apiKey: process.env.ALTFINS_API_KEY ?? '',
 });
 ```
 
@@ -260,8 +260,7 @@ altfins-api-examples/
 The project now includes an interactive runner that allows you to easily select and execute specific examples.
 
 ```bash
-# Set your API key (optional if hardcoded in src/api-client.ts)
-export ALTFINS_API_KEY="your-api-key"
+# Supply ALTFINS_API_KEY through your shell or secret manager.
 
 # Run the interactive example runner
 npm start

@@ -3,10 +3,10 @@
  * Service for calling Altfins API endpoints
  */
 
-import { callApi, ApiResponse } from './api';
+import 'server-only';
+import { callApi } from './api';
 
 const ALTFINS_API_BASE = 'https://altfins.com/api/v2/public';
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 export interface SignalKey {
   [key: string]: unknown;
@@ -106,11 +106,9 @@ export interface SignalSearchPayload {
 
 export class AltfinsService {
   private static instance: AltfinsService;
-  private apiKey: string;
   private baseUrl: string;
 
   private constructor() {
-    this.apiKey = API_KEY || '';
     this.baseUrl = ALTFINS_API_BASE;
   }
 
@@ -184,15 +182,18 @@ export class AltfinsService {
     method: 'GET' | 'POST' = 'GET',
     body?: unknown
   ): Promise<SignalFeedResponse<T>> {
+    const apiKey = process.env.ALTFINS_API_KEY;
+    if (!apiKey?.trim()) {
+      return { success: false, error: 'Configure ALTFINS_API_KEY on the server.' };
+    }
     const url = `${this.baseUrl}/${endpoint}`;
 
     const response = await callApi<T>(url, {
       method,
       headers: {
-        'x-api-key': this.apiKey,
+        'x-api-key': apiKey,
       },
       body,
-      includeApiKey: false,
     });
 
     return {

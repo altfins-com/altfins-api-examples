@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { altfinsService, ScreenerPayload } from '@/lib/services/altfins';
+import { altfinsService, type ScreenerPayload, type SignalSearchPayload } from '@/lib/services/altfins';
 
 export async function GET(request: NextRequest) {
   try {
@@ -69,13 +69,7 @@ export async function POST(request: NextRequest) {
       const sort = searchParams.get('sort') || undefined;
 
       const body = await request.json();
-      console.log(`[API Route] searchSignals payload:`, JSON.stringify(body));
-
-      // Assume body is safely castable to SignalSearchPayload for now
-      // Dynamically imported or defined in service, but we are in route.ts, 
-      // so we use 'any' or just pass body. Ideally we import SignalSearchPayload.
-      const result = await altfinsService.searchSignals(body as any, page, size, sort);
-      console.log(`[API Route] searchSignals result success:`, result.success);
+      const result = await altfinsService.searchSignals(body as SignalSearchPayload, page, size, sort);
 
       if (!result.success) {
         return NextResponse.json(

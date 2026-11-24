@@ -17,25 +17,16 @@ A Spring Boot Telegram bot that monitors Bitcoin (BTC) price using the Altfins A
 
 ## Configuration
 
-The application is configured via `src/main/resources/application.properties`. You generally don't need to change the code, just update this file.
+Supply these environment variables to the bot process before starting it. Use your secret manager for the two tokens.
 
-### Default Configuration
+| Variable | Value |
+| --- | --- |
+| `ALTFINS_API_KEY` | altFINS API key |
+| `TELEGRAM_BOT_TOKEN` | BotFather token |
+| `TELEGRAM_BOT_USERNAME` | Telegram bot username |
+| `TELEGRAM_CHAT_ID` | Destination chat ID |
 
-```properties
-# Altfins API Configuration
-altfins.api.url=https://altfins.com/api/v2/public/screener-data/search-requests
-altfins.api.key=YOUR_ALTFINS_API_KEY
-
-# Telegram Bot Configuration
-telegram.bot.token=YOUR_TELEGRAM_BOT_TOKEN
-telegram.bot.username=YOUR_BOT_USERNAME
-telegram.bot.chat-id=YOUR_CHAT_ID
-
-# Price Monitor Configuration
-price.monitor.threshold=100
-```
-
-You must replace `YOUR_ALTFINS_API_KEY`, `YOUR_TELEGRAM_BOT_TOKEN`, `YOUR_BOT_USERNAME`, and `YOUR_CHAT_ID` with your actual credentials.
+Set `price.monitor.threshold` in `application.properties` to change the notification threshold.
 
 ## How to Run
 

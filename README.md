@@ -2,6 +2,8 @@
 
 This repository contains a collection of example applications for working with the altFINS Public API v2.
 
+Keep API credentials in the process environment. The [Next.js app](nextjs-app-example/README.md#configuration) reads its key on the server. The [price bot](telegram-price-bot/README.md#configuration) and [signal bot](telegram-signal-bot/README.md#configuration) read their credentials at startup.
+
 # api-typescript-example application
 
 This project serves as a comprehensive guide and TypeScript SDK for working with the **altFINS Public API v2**.

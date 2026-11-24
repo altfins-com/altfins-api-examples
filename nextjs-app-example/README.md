@@ -17,7 +17,7 @@ Follow these steps to run the application locally.
 
 ### Prerequisites
 
-- Node.js (version 18 or higher recommended)
+- Node.js 20.9 or higher
 - `npm` or `yarn`
 
 ### Installation
@@ -37,11 +37,15 @@ Follow these steps to run the application locally.
 
 ### Configuration
 
-1. Create a `.env.local` file in the root directory.
-2. Add your Altfins API key to the file:
-   ```env
-   NEXT_PUBLIC_API_KEY=your_api_key_here
-   ```
+From `nextjs-app-example`, copy the template and set `ALTFINS_API_KEY` in the ignored local file, or inject it into the server process through your secret manager.
+
+```bash
+cp .env.example .env.local
+```
+
+Existing installations should rename `NEXT_PUBLIC_API_KEY` to `ALTFINS_API_KEY`, then rebuild and restart. Rotate the old key if it appeared in a commit, a browser build or request logs.
+
+The example binds to loopback. Its API route uses the operator’s quota. Protect both the UI and `/api/altfins` with authentication before hosting it for other people.
 
 ### Running the Application
 
@@ -57,6 +61,6 @@ Follow these steps to run the application locally.
 ## Project Structure
 
 - `app/`: Next.js app directory containing pages and API routes.
-- `lib/services/`: API service logic and helper functions.
+- [API route](app/api/altfins/route.ts) and [server service](lib/services/altfins.ts) for authenticated requests.
 - `lib/components/`: Reusable UI components.
 - `lib/hooks/`: Custom React hooks for data fetching.

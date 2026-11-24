@@ -7,7 +7,6 @@ interface RequestOptions {
   headers?: Record<string, string>;
   body?: unknown;
   timeout?: number;
-  includeApiKey?: boolean;
 }
 
 export interface ApiResponse<T> {
@@ -26,44 +25,6 @@ const DEFAULT_HEADERS = {
 };
 
 /**
- * API configuration
- */
-interface ApiConfig {
-  apiKey?: string;
-  apiKeyHeader?: string;
-}
-
-let apiConfig: ApiConfig = {
-  apiKey: process.env.NEXT_PUBLIC_API_KEY,
-  apiKeyHeader: 'X-API-Key',
-};
-
-/**
- * Sets API key and configuration
- * @param key API key
- * @param headerName HTTP header name (default: 'X-API-Key')
- */
-export function setApiKey(key: string, headerName: string = 'X-API-Key'): void {
-  apiConfig.apiKey = key;
-  apiConfig.apiKeyHeader = headerName;
-}
-
-/**
- * Returns current API configuration
- */
-export function getApiConfig(): ApiConfig {
-  return apiConfig;
-}
-
-/**
- * Resets API configuration
- */
-export function resetApiKey(): void {
-  apiConfig.apiKey = undefined;
-  apiConfig.apiKeyHeader = 'X-API-Key';
-}
-
-/**
  * Calls external REST API endpoint
  * @param url API endpoint URL
  * @param options Request options (method, headers, body, timeout)
@@ -78,30 +39,22 @@ export async function callApi<T = unknown>(
     headers = {},
     body,
     timeout = DEFAULT_TIMEOUT,
-    includeApiKey = true,
   } = options;
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
   try {
-    // Prepare headers with API key
     const finalHeaders: Record<string, string> = {
       ...DEFAULT_HEADERS,
       ...headers,
     };
 
-    // Add API key if configured and includeApiKey is true
-    if (includeApiKey && apiConfig.apiKey && apiConfig.apiKeyHeader) {
-      finalHeaders[apiConfig.apiKeyHeader] = apiConfig.apiKey;
-    }
-
-    console.log(`[API] ${method} ${url}`);
-    console.log('[API] Headers:', finalHeaders);
-
     const response = await fetch(url, {
       method,
       headers: finalHeaders,
+      redirect: 'error',
+      cache: 'no-store',
       body: body ? JSON.stringify(body) : undefined,
       signal: controller.signal,
     });
@@ -109,24 +62,9 @@ export async function callApi<T = unknown>(
     console.log(`[API] Status: ${response.status} ${response.statusText}`);
 
     if (!response.ok) {
-      let errorBody = '';
-      try {
-        const contentType = response.headers.get('content-type');
-        if (contentType?.includes('application/json')) {
-          errorBody = JSON.stringify(await response.json());
-        } else {
-          errorBody = await response.text();
-        }
-      } catch {
-        errorBody = 'Failed to parse error response';
-      }
-
-      const errorMessage = `HTTP ${response.status} ${response.statusText}${errorBody ? ': ' + errorBody.substring(0, 200) : ''}`;
-      console.error('[API] Error:', errorMessage);
-
       return {
         success: false,
-        error: errorMessage,
+        error: `HTTP ${response.status}`,
         status: response.status,
       };
     }
@@ -148,7 +86,6 @@ export async function callApi<T = unknown>(
       };
     }
 
-    console.log('[API] Success:', data);
     return {
       success: true,
       data,
